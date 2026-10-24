@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KICK LAB · del seno puro al kick de hard techno</title>
+<meta name="description" content="Curso interactivo de diseño de sonido: construye un kick y un rumble de hard techno desde un seno, nivel a nivel, con síntesis en vivo.">
+<meta name="theme-color" content="#090c0d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23090c0d'/%3E%3Cpath d='M4 16 C8 2 10 2 12 16 S16 26 18 16 S24 12 28 16' stroke='%23C3E298' stroke-width='3' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-level="1">
+
+<!-- portada: aviso de volumen y desbloqueo del audio -->
+<div id="gate" class="gate">
+  <div class="rings" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <div class="gate-in">
+    <p class="eyebrow">Curso interactivo de diseño de sonido</p>
+    <h1>KICK<span>LAB</span></h1>
+    <p class="lead">Del seno puro al kick de hard techno. <b>15 niveles</b>, un solo sonido que crece: cada nivel le suma un módulo, como lo hace un productor.</p>
+    <div class="warn"><b><svg class="ico" viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="7" rx="1.5"/><rect x="17" y="14" width="4" height="7" rx="1.5"/></svg>Baja el volumen antes de entrar.</b> Mejor con audífonos o parlantes con bajo: el sub bajo 60 Hz casi no sale por el parlante del celular. Hay un limitador al final que no deja pasar ningún pico sobre −1 dBFS.</div>
+    <button id="enter" class="enter" type="button">Entrar al lab <span>▶</span></button>
+    <p class="hint">Barra espaciadora = play / stop · arrastra las perillas hacia arriba o abajo · doble clic vuelve al valor inicial</p>
+  </div>
+</div>
+
+<header class="top">
+  <div class="brand">
+    <span class="logo">KICK<b>LAB</b></span>
+    <i id="beatLed" class="beat-led" aria-hidden="true"></i>
+  </div>
+  <nav id="levelNav" class="lvnav" aria-label="Niveles"></nav>
+  <div class="transport">
+    <button id="play" class="play" type="button" aria-label="Play / stop" aria-pressed="false"><svg viewBox="0 0 24 24"><path class="i-play" d="M8 5v14l11-7z"/><path class="i-stop" d="M7 7h10v10H7z"/></svg></button>
+    <div id="bpmKnob" class="tk"></div>
+    <div id="volKnob" class="tk"></div>
+    <button id="glossBtn" class="gloss-btn" type="button">Glosario <b id="glossCount">0</b></button>
+  </div>
+  <div class="prog"><i id="progFill"></i></div>
+</header>
+
+<section class="chain-wrap" aria-label="Cadena de señal">
+  <div class="sec-h"><b>Cadena de señal</b><span>toca un módulo para apagarlo o encenderlo</span></div>
+  <div id="chain" class="chain"></div>
+</section>
+
+<main class="main">
+  <article class="lesson" id="lesson">
+    <div class="lv-head">
+      <div class="lv-num"><small>NIVEL</small><b id="lvNum">01</b><small>/ 15</small></div>
+      <div><p id="lvKicker" class="kicker"></p><h2 id="lvTitle"></h2></div>
+    </div>
+    <p id="lvConcept" class="concept"></p>
+    <div class="why"><h3>Por qué lo hacen los productores</h3><p id="lvWhy"></p></div>
+    <p id="lvTip" class="tip" hidden></p>
+
+    <div id="task" class="task">
+      <div class="task-h"><i id="taskLed" class="led red"></i><b>Reto</b><span id="taskState">En curso</span></div>
+      <p id="taskText"></p>
+      <small id="taskProg"></small>
+    </div>
+
+    <div class="actions">
+      <button id="ab" class="ab" type="button" title="Compara con y sin el módulo nuevo"><span id="abA">A · CON</span><i></i><span id="abB">B · SIN</span></button>
+      <button id="sugg" class="btn" type="button">Valores sugeridos</button>
+      <button id="earBtn" class="btn ear-b" type="button" hidden><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>Reto de oído</button>
+    </div>
+    <div class="nav-actions">
+      <button id="skip" class="btn ghost" type="button">Saltar reto</button>
+      <button id="next" class="btn primary" type="button" disabled>Siguiente nivel →</button>
+    </div>
+
+    <!-- reto de oído -->
+    <div id="ear" class="ear" hidden>
+      <div class="ear-h"><b><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>Reto de oído</b><button id="earClose" class="x" type="button" aria-label="Cerrar">✕</button></div>
+      <p>La app armó un kick secreto con los módulos que ya conoces. Recréalo con tus perillas.</p>
+      <div class="ear-sw"><button id="earT" class="on" type="button">Escuchar objetivo</button><button id="earM" type="button">Escuchar mi kick</button></div>
+      <div class="ear-score"><b id="earScore">–</b><small>/ 100</small></div>
+      <div class="ear-bars">
+        <label>Espectro<span><i id="earBar_spec"></i></span><em id="earVal_spec">–</em></label>
+        <label>Ataque<span><i id="earBar_att"></i></span><em id="earVal_att">–</em></label>
+        <label>Envolvente<span><i id="earBar_env"></i></span><em id="earVal_env">–</em></label>
+      </div>
+      <p id="earHint" class="ear-hint"></p>
+      <div class="ear-act"><button id="earJudge" class="btn primary" type="button">Juzgar</button><button id="earNew" class="btn" type="button">Otro objetivo</button><button id="earReveal" class="btn ghost" type="button">Rendirme</button></div>
+    </div>
+
+    <!-- estudio libre -->
+    <div id="studio" class="studio" hidden>
+      <h3>Presets</h3>
+      <div class="pre-row"><input id="presetName" type="text" placeholder="Nombre (ej. Kick F 155 sucio)" maxlength="40"><button id="presetSave" class="btn primary" type="button">Guardar</button></div>
+      <ul id="presetList" class="presets"></ul>
+      <button id="presetBrutal" class="btn" type="button">Cargar preset Berlín 155 (inspirado en Brutalismus 3000)</button>
+      <h3>Exportar WAV</h3>
+      <div class="exp"><button class="btn" data-export="kick" type="button">Kick one-shot</button><button class="btn" data-export="rumble" type="button">Rumble · 4 compases</button><button class="btn" data-export="loop" type="button">Loop completo · 4 compases</button></div>
+      <button id="reset" class="btn ghost danger" type="button">Borrar mi avance</button>
+    </div>
+  </article>
+
+  <div class="right">
+    <section class="screens" aria-label="Visualización">
+      <div class="screen scope-s"><div class="scr-h"><b>Osciloscopio</b><span>el golpe, en un pulso</span></div><canvas id="scope"></canvas></div>
+      <div class="screen spec-s"><div class="scr-h"><b>Espectro</b><span>en vivo · Hz y notas</span></div><canvas id="spec"></canvas></div>
+      <div class="screen sgram-s"><div class="scr-h"><b>Espectrograma</b><span>cascada · 20 Hz – 4 kHz</span></div><canvas id="sgram"></canvas></div>
+      <div class="meters">
+        <div><small>PICO</small><b id="mPeak">–</b><em>dBFS</em></div>
+        <div><small>LOUDNESS</small><b id="mLufs">–</b><em>LUFS · 1 compás</em></div>
+        <div><small>NOTA</small><b id="mNote">–</b><em id="mNoteSub"></em></div>
+        <div id="mTailBox"><small>COLA</small><b id="mTail">–</b><em id="mTailSub">ms</em></div>
+        <div><small>LIMITADOR</small><b id="mGr">–</b><em>dB</em></div>
+        <span id="srcTag" class="src-tag">SONANDO</span>
+      </div>
+    </section>
+    <section id="rack" class="rack" aria-label="Módulos"></section>
+  </div>
+</main>
+
+<aside id="gloss" class="gloss" aria-label="Glosario">
+  <div class="gloss-h"><b>Glosario</b><button id="glossClose" class="x" type="button" aria-label="Cerrar">✕</button></div>
+  <input id="glossQ" type="search" placeholder="Buscar término">
+  <div id="glossList"></div>
+</aside>
+
+<button id="fab" class="fab" type="button" aria-label="Play / stop"><svg viewBox="0 0 24 24"><path class="i-play" d="M8 5v14l11-7z"/><path class="i-stop" d="M7 7h10v10H7z"/></svg></button>
+<div id="toast" class="toast" role="status"></div>
+
+<footer class="foot">KICK LAB · síntesis en vivo con Web Audio, sin samples · hecho para entrenar el oído y la mano</footer>
+
+<script src="js/dsp.js"></script>
+<script src="js/levels.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
